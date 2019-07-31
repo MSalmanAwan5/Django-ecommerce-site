@@ -1,0 +1,65 @@
+{%url 'index' as home_url%}
+{%url 'contact' as contact_url%}
+{%url 'products:list' as product_url%}
+{%url 'login' as login_url%}
+{%url 'signup' as signup_url%}
+{%url 'logout' as logout_url%}
+{%url 'carts:home' as cart_url%}
+{%load static %}
+<style>
+  #navbarSupportedContent li:hover{
+    background-color:#B07DC7;
+    text-decoration:underline;
+  }
+  .active{
+  background-color:#white;
+  }
+</style>
+
+
+<nav class="navbar navbar-expand-lg navbar-light mb-5 fixed-top" style="background-color: #C792E1;">
+  <div class="container">
+  <a class="navbar-brand" href="#">{%if brand_name %} {{brand_name}} {%else%}{{eCommerece}}{%endif%}</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li id="h" class="nav-item pr-3 {%if request.path == home_url%}active{%endif%}">
+
+          <a class="nav-link " id="home" href="{{home_url}} ">Home</a>
+      </li>
+      <li class="nav-item pr-3 {%if request.path == contact_url%}active{%endif%}">
+        <a class="nav-link" href="{{contact_url}} " >Contact</a>
+      </li>
+
+      <li class="nav-item pr-3 {%if request.path == product_url%}active{%endif%}">
+        <a class="nav-link" href="{{product_url}}">Product</a>
+      </li>
+        {%if request.user.is_authenticated%}
+        <li class="nav-item {%if request.path == logout_url%}active{%endif%}">
+        <a class="nav-link" href="{{logout_url}} " >Logout</a>
+      </li>
+        {%else%}
+        <li class="nav-item pr-3 {%if request.path == login_url%}active{%endif%}">
+        <a class="nav-link" href="{{login_url}} " >Login</a>
+      </li>
+
+         <li class="nav-item pr-3 {%if request.path == signup_url%}active{%endif%}">
+        <a class="nav-link" href="{{signup_url}} " >Signup</a>
+      </li>
+        {%endif%}
+      <li class="nav-item pr-3 {%if request.path == cart_url%}active{%endif%}">
+
+        <a class="nav-link" href="{{cart_url}} " ><span class="cartCount">{{request.session.cart_items}}</span><i class="fa fa-shopping-cart" aria-hidden="TRUE"></i></a>
+      </li>
+    </ul>
+    <form class="searchForm form-inline my-2 my-lg-0" method='GET' action="{%url 'search:query'%}">
+      <input id="search" class="form-control mr-sm-2" name="q" value="{{request.GET.q}}"type="search" placeholder="Keywords, categories, items" aria-label="Search">
+      <button  class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+  </div>
+    </div>
+</nav>
+

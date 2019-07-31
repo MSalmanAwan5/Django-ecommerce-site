@@ -1,0 +1,71 @@
+{%extends "base.html" %}
+{%load static%}
+{%block content%}
+
+{% if cart.products.exists %}
+<div class="container">
+    <h1 class="display-3 text-center">Your Shopping Cart</h1><br/><br/>
+    <div class="row">
+    <div class="col">
+        <table class="table cart-table">
+  <thead>
+
+    <tr>
+      <th scope="col" class="display-6">#</th>
+      <th scope="col" class="display-6">Product Name</th>
+      <th scope="col" class="display-6">Product Price</th>
+    </tr>
+  </thead>
+          <tbody class="cart-body">
+  {%for product in cart.products.all%}
+
+
+    <tr class="cart-product">
+        <span class="carthome">Cart home</span>
+      <th scope="row">{{forloop.counter}}</th>
+        <td><a href="{{product.get_absolute_url}}" target="_blank">{{product.title}}</a>
+        {%include 'carts/remove-product.html' with product_id=product.id%}
+        </td>
+      <td>{{product.price}}</td>
+    </tr>
+    {%endfor%}
+
+    <tr>
+      <td colspan="2"></td>
+      <td ><b>Sub Total</b><span class="cart-subtotal"> Rs. {{cart.subtotal}} </span></td>
+    </tr>
+    <tr>
+      <td colspan="2"></td>
+      <td ><b>Total</b> <span class="cart-total"> Rs. {{cart.total}}</span> after taxes</td>
+
+    </tr>
+  <tr>
+    <td colspan="2"></td>
+    <td><a class="btn btn-lg btn-success text-center" href="{% url 'carts:checkout'%}">Checkout</a></td>
+
+    </tr>
+
+  </tbody>
+
+</table>
+    <div class="cart_item_remove-form" style="display:none">
+       {%include 'carts/remove-product.html'%}
+    </div>
+
+    </div>
+
+</div>
+
+{% else %}
+  <div class="row">
+    <div class="col-12 col-md-6 mx-auto">
+    <h1 class="display-2 text-center">Your Cart is empty!</h1>
+      <hr/>
+
+      <a href="/products/list"><h1 class="lead text-center">Add products to your cart</h1></a>
+    </div>
+  </div>
+
+{%endif%}
+{%endblock%}</div>
+

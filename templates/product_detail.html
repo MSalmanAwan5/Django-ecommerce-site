@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+<body>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = 'https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v3.2&appId=755636048129806&autoLogAppEvents=1';
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+{%block content%}
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            {{object.title}}<br />
+            {{object.description}}<br/>
+            <b>Price:</b> {{object.price}}<br/>
+            {% if object.image %}
+            <img src = "{{object.image.url}}"/>
+            {%endif%}
+            </div>
+        <div class="fb-like" data-href="http://localhost:8000/products/detail/{{object.slug}}" data-layout="standard" data-action="recommend" data-size="small" data-show-faces="true" data-share="true"></div>
+        <div class="col-12 col-md-6">
+            {%include 'update_cart.html' with product=object cart=cart%}
+
+        </div>
+    </div>
+
+</div>
+{%endblock%}
+
+</body>

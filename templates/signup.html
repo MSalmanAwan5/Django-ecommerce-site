@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+{%load static%}
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Ask AND Ans</title>
+
+
+    <!-- Bootstrap core CSS -->
+    <link href="{%static 'vendor/bootstrap/css/bootstrap.min.css'%}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/blog-home.css'%}" rel="stylesheet">
+
+
+	<link rel="stylesheet" href="{% static 'assets/form-register.css'%}">
+
+  </head>
+  
+  <script type = "text/javascript">
+	
+  
+	function validatePassw()
+	{
+		if(document.getElementById('pass').value.length < 8)
+		{
+			
+			document.getElementById('message1').style.color = 'grey';
+			
+			document.getElementById('message1').innerHTML = "Password is too short!"
+			
+		}
+		else{
+			document.getElementById('message1').style.color = 'grey';
+			
+			document.getElementById('message1').innerHTML = "OK"
+		}
+	}
+	function validatePass()
+	{
+		
+		if(document.getElementById('pass').value!=""){
+		if(document.getElementById('pass').value == document.getElementById('cpass').value)
+		{
+			document.getElementById('message').style.color = 'green';
+			
+			document.getElementById('message').innerHTML = "passwords match";
+			
+		}
+		else
+		{
+			document.getElementById('message').style.color = 'red';
+			document.getElementById('message').innerHTML = "passwords didn't match";
+		}
+		}
+	}
+	function checkExist(){
+            
+        
+                var xmlhttp = new XMLHttpRequest();
+                var email = document.getElementById("email").value;
+                var url = "exist.jsp?email=" + email;
+                xmlhttp.onreadystatechange = function(){
+                    if(xmlhttp.readyState == 4 && xmlhttp.status == 200){
+                        if(xmlhttp.responseText == "\n\n\n\n\nUser already exists")
+                            document.getElementById("isE").style.color = "red";
+                        else
+                            document.getElementById("isE").style.color = "green";
+                        document.getElementById("isE").innerHTML = xmlhttp.responseText;
+                    }
+                    
+                };
+                try{
+                xmlhttp.open("Post",url,true);
+                xmlhttp.send();
+            }catch(e){alert("unable to connect to server");
+            }
+        }
+  </script>
+
+  <body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="#">Ask And Ans - An amazing platform for everyone to ask and answer queries of others.</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+
+			<li class="nav-item">
+              <a class="nav-link" href="/index/">Login</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="main-content">
+
+        <!-- You only need this form and the form-register.css -->
+        {%csrf_token%}
+        <form class="form-register" name = "form-register" method="post" action="signup">
+
+            <div class="form-register-with-email">
+
+                <div class="form-white-background">
+
+                    <div class="form-title-row">
+                        <h1>Create an account</h1>
+                    </div>
+
+                    <div class="form-row">
+                        <label>
+                            <span>First Name</span>
+                            {{form.firstName}}
+                            <!--<input type="text" id = "fname" name="fname" onblur="return isEmpty('fname')" onfocus = "this.placeholder = 'Enter First Name'" required>-->
+                        </label>
+                    </div>
+					<div class="form-row">
+                        <label>
+                            <span>Last Name</span>
+                            {{form.lastName}}
+                            <!--<input type="text" name="lname" id = 'lname' onblur="return isEmpty('lname')" onfocus = "this.placeholder = 'Enter Last Name'"required>-->
+                        </label>
+                    </div>
+
+                    <div class="form-row">
+                        <label>
+                            <span>Email</span>
+                            {{form.email}}
+                            <!--<input type="email" id = 'em' name='email' onblur="checkExist()" onfocus = "this.placeholder = 'Enter Email'" required><span id="isE">--></span><br><br>
+                        </label>
+                    </div>
+
+                    <div class="form-row">
+                        <label>
+                            <span>Password</span>
+                            {{form.password}}
+                            <!--<input type="password" name="password" id = 'pass' onkeydown = "validatePassw()" onblur = "validatePass()" onfocus = "this.placeholder = 'Enter Password'" required>-->
+                        </label>
+                    </div>
+					<span id="message1"></span>
+					<br/>
+					<div class="form-row" id = "confirm-pass">
+                        <label>
+                            <span>Confirm Password</span>
+                            {{form.ConfirmPassword}}
+                            <!--<input type="password" name="cpass" id = 'cpass'   onkeyup = "validatePass()" onfocus = "this.placeholder = 'Confirm Password'" required>-->
+                        </label>
+                    </div>
+					<span id="message"></span>
+					<br/><br/>
+                    <div class="form-row">
+                        <label class="form-checkbox">
+                            <input type="checkbox" name="checkbox" checked>
+                            <span>I agree to the <a href="#">terms and conditions</a></span>
+                        </label>
+                    </div>
+
+                    <div class="form-row">
+                        <button type="submit" onclick="validatePassw()">Register</button>
+                    </div>
+
+                </div>
+
+                <a href="form-login.html" class="form-log-in-with-existing">Already have an account? Login here</a>
+
+
+        </div>
+        </form>
+
+    </div>
+
+	<script>
+	
+	</script>
+	
+	
+</body>
+
+</html>

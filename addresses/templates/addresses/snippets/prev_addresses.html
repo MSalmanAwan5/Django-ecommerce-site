@@ -1,0 +1,21 @@
+ <form method="POST" action="{{action_url}}">
+     {%csrf_token%}
+     {%for address in address_qs%}
+        {%if next_url%}
+            <input type="hidden" name="next" value="{{next_url}}"/>
+        {%endif%}
+        {%if address_type%}
+            <input type="hidden" name="address_type" value="{{address_type}}">
+        {%endif%}
+
+     <label for="address-{{ address.id }}">
+        <input type="radio" id="address-{{ address.id }}" name="shipping_address" value="{{address.id}}"/>
+        {{address.id}}
+        {{address.address_line1}}
+     </label>
+
+     <hr/>
+
+     {%endfor%}
+    <button class="btn btn-success">Use Address</button>
+</form>

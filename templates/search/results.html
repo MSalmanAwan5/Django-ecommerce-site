@@ -1,0 +1,26 @@
+{%extends 'base.html'%}
+
+{%block content%}
+<div class="container bg-light">
+    <div class="row">
+        <div class="col-12 mb-5">
+        Results for  <b>{{query}}</b>: <br/>
+        </div>
+        {%if object_list%}
+            {% for obj in object_list %}
+                <div class="col">
+                {% include 'card.html' with instance=obj %}
+                {%if forloop.counter|divisibleby:3s%}
+                </div></div><div class="row"><div class="col"><br/></div>
+                {%else%}
+                 </div>
+                {%endif%}
+            {%endfor%}
+        {%else%}
+        <div class="col-12 mx-auto my-auto">
+            <p>Your search didn't bring any results</p>
+        </div>
+        {%endif%}
+         </div>
+    </div>
+{%endblock%}

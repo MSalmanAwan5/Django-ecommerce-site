@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+
+    {%block content%}
+
+<div class="container">
+    <div class="row">
+
+        <div class="col">
+    {{object.title}}<br />
+    {{object.description}}<br/>
+   <b>Price:</b> {{object.price}}<br/>
+    {% if object.image %}
+        <img src = "{{object.image.url}}"/>
+    {%endif%}
+
+            </div>
+        <div class="col-12 col-md-6">
+        {%include "update_cart.html" with product=object cart=cart%}
+    </div>
+</div>
+{%endblock%}
+

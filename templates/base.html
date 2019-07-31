@@ -1,0 +1,226 @@
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+<!--
+    <meta name="viewport" content="width=device-width">
+-->
+
+    <!-- Bootstrap CSS -->
+    {% include 'base/css.html' %}
+
+    <title>Hello, world!</title>
+  </head>
+  <body style="padding:70px">
+  {%include 'base/navbar.html' with brand_name='CHAMAN'%}
+  {% block content %}
+  {% endblock %}
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    {% include 'base/js.html' %}
+
+  <!--{% include 'base/jquery.min.js'%}-->
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $.toast("hello")
+      // ajexifying contact form
+      var contactForm = $('.contact-form')
+      var contactFormMethod = contactForm.attr('method')
+      var contactFormURL = contactForm.attr('action')
+      var thisForm = $(this)
+      contactForm.submit(function(event){
+        event.preventDefault()
+        $.ajax({
+          data:contactForm.serialize(),
+          method:contactFormMethod,
+          url:contactFormURL,
+          success: function(data)
+          {
+            console.log(contactForm[0])
+            contactForm[0].reset()
+            $.alert({
+              title:"Thank you!",
+              content:"your response has been saved.",
+              theme:"dark",
+              backgroundDismiss:true
+              });
+          },
+          error:function(error)
+          {
+            console.log(error)
+            msg = ""
+            
+            $.alert({
+              title:"OOPs!",
+              content:"An error occured",
+              theme:"modern"
+            })
+          }
+        });
+      });
+
+      
+
+      //Auto Search
+      var searchForm = $('.searchForm')
+      var searchInput = searchForm.find("[name='q']")
+      var typingTimer;
+      var typingInterval = 500;
+      var searchBtn = searchForm.find("[type='submit']")
+
+
+      searchInput.keyup(function(){
+        if(searchInput.val() != ""){
+        clearTimeout(typingTimer)
+        typingTimer = setTimeout(PerformSearch, typingInterval)}
+      })
+
+      searchInput.keydown(function(){
+        clearTimeout(typingTimer)
+      })
+
+      function DisplaySearching(){
+        searchBtn.addClass("disabled")
+        searchBtn.html("<i class='fa fa-spin fa-spinner'></i>Searching...")
+      }
+      function PerformSearch(){
+        DisplaySearching()
+        var query = searchInput.val()
+        setTimeout(function(){
+          window.location.href = '/search/list/?q=' + query
+        },1000)
+      }
+
+      //product adding/removing in the cart
+      //alert("ggg")
+        var productForm = $('.product-form-ajax')
+        productForm.submit(function(event){
+          event.preventDefault()
+          // console.log("form is not sending")
+          var $this = $(this)
+          var dataForm = $this.serialize()
+          var actionEndPoint = $this.attr("action")
+          var httpMethod = $this.attr("method")
+          $.ajax({
+            url: actionEndPoint,
+            data: dataForm,
+            method: httpMethod,
+            success:function(data)
+            {
+
+              var submitSpan = $this.find(".submit-span")
+              if(data.added == true)
+              {
+                $.toast({
+                  text: "Product added successfully to cart", // Text that is to be shown in the toast
+                  heading: 'Success!', // Optional heading to be shown on the toast
+                  icon: 'success', // Type of toast icon
+                  showHideTransition: 'slide', // fade, slide or plain
+                  allowToastClose: true, // Boolean value true or false
+                  hideAfter: 4000, // false to make it sticky or number representing the miliseconds as time after which toast needs to be hidden
+                  stack: 5, // false if there should be only one toast at a time or a number representing the maximum number of toasts to be shown at a time
+                  position: 'top-center', // bottom-left or bottom-right or bottom-center or top-left or top-right or top-center or mid-center or an object representing the left, right, top, bottom values
+                  
+                  
+                  
+                  textAlign: 'left',  // Text alignment i.e. left, right or center
+                  loader: true,  // Whether to show loader or not. True by default
+                  loaderBg: '#9ec600',  // Background color of the toast loader
+                  beforeShow: function () {}, // will be triggered before the toast is shown
+                  afterShown: function () {}, // will be triggered after the toat has been shown
+                  beforeHide: function () {}, // will be triggered before the toast gets hidden
+                  afterHidden: function () {}  // will be triggered after the toast has been hidden
+                });
+                setTimeout(function(){
+                submitSpan.html("<button type='submit' class='btn-btn-link'>Remove from cart</button>")
+               },1000)
+                submitSpan.html("<i class='fa fa-spin fa-spinner'></i>Adding...")
+                
+           
+                // $.toaster({ priority : 'success', title : 'Success', message : 'Product added successfully to cart!'});
+                // https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css
+              }
+              else
+              {
+                setTimeout(function(){
+                submitSpan.html("<button type='submit' class='btn-success'>Add to cart</button>")
+                },1000)
+                submitSpan.html("<i class='fa fa-spin fa-spinner'></i>Removing...")
+
+              }
+              console.log(submitSpan.html())
+              var cartCount = $(".cartCount")
+              cartCount.text(data.cartItemCount)
+              if(window.location.href.indexOf("cart") > -1)
+              {
+                //alert("refreshCart");
+               // alert(window.location.href);
+                refreshCart();
+              }
+              else
+              {
+               // alert(window.location.href);
+              }
+            },
+            error: function(errorData)
+            {
+              //alert(window.location.href)
+              console.log("error")
+              console.log(errorData)
+            }
+          })
+
+        })
+      function refreshCart(){
+        console.log("in current cart")
+        var cartTable = $('.cart-table')
+        var cartBody = cartTable.find('.cart-body')
+        //cartBody.html("<h1>Changed</h1>")
+        var productRows = cartBody.find('.cart-product')
+        var refreshCartUrl = '/api/cart';
+        var refreshCartData = {};
+        var refreshCartMethod = 'GET';
+        var currentPath = window.location.href
+
+        $.ajax({
+        url: refreshCartUrl,
+        method: refreshCartMethod,
+        data: refreshCartData,
+
+        success:function(data){
+          var HiddenFormProductRemove = $(".cart_item_remove-form")
+          console.log(HiddenFormProductRemove)
+          console.log(data.products.length)
+          if(data.products.length >0){
+            i = data.products.length
+            productRows.html("")
+            $.each(data.products, function(index, value){
+            var newFormItemRemove = HiddenFormProductRemove.clone()
+            //newFormItemRemove.css("display","block")
+            newFormItemRemove.find(".cart-item-id").val(value.id)
+            console.log(value)
+            console.log("running")
+            cartBody.prepend("<tr><th scope='row'>" + i + "</th><td>" + "<a href='" + value.url + "'>" + value.name + "</a>" + newFormItemRemove.html() + "</td><td>" + value.price + "</td></tr>")
+            i --
+            })
+            cartBody.find('.cart-subtotal').text(data.subtotal)
+            cartBody.find('.cart-total').text(data.total)
+          }
+          else{
+            window.location.href = currentPath
+          }
+
+         },
+         error:function(errorData){
+         alert("error")
+         //window.location.href = '/'
+          console.log("error")
+          console.log(errorData)
+         }
+        })
+      }
+      })
+    </script>
+  </body>
+</html>

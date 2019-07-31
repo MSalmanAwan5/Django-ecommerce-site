@@ -1,0 +1,5 @@
+<form class="form product-form-ajax" method='POST' action="{%url 'carts:update'%}" data-endpoint="{%url 'carts:update'%}" xmlns="http://www.w3.org/1999/html">{%csrf_token%}
+    <input class="cart-item-id" type="hidden" name="product_id" value="{{product_id}}"/>
+<button class="btn btn-link btn-sm" style="padding:0px" type="submit"><i class="fa fa-trash-o"></i></button>
+
+</form>
